@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             counthour = 0;
             countDecihour++;
         }
-        time = countmin+A+countDeciSec+countsec+A+countMilisec+countMicrosec;
+        time = countDecimin+countmin+A+countDeciSec+countsec+A+countMilisec+countMicrosec;
 
 
     }
@@ -150,11 +150,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.StartPause):
                 if (precommand == R.id.Start) {
                     mythreads.get(0).interrupt();
+                    DogThreads.get(0).interrupt();
                     precommand = R.id.StartPause;
                     StopAddBTN.setText(R.string.Stop);
                     StartPauseBTN.setText(R.string.Continue);
                 } else if (precommand == R.id.StartPause) {
                     goSeconds();
+                    dogThread();
                     StopAddBTN.setText(R.string.Add);
                     precommand = R.id.Start;
                     StartPauseBTN.setText(R.string.Pause);
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SecondsView.setText("0:00:00");
                     StartBTN.setVisibility(View.VISIBLE);
                     leaders.clear();
+                    DogThreads.clear();
                     i=1;
                     adapter.notifyDataSetChanged();
                     precommand=0;
