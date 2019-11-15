@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     StartPauseBTN.setText(R.string.Continue);
                 } else if (precommand == R.id.StartPause) {
                     goSeconds();
+                    StopAddBTN.setText(R.string.Add);
                     precommand = R.id.Start;
                     StartPauseBTN.setText(R.string.Pause);
                 } else if(precommand==0){
