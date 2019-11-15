@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TheLordOfTheTime</string>
+    <string name="Continue">Continue</string>
+    <string name="Pause">Pause</string>
+    <string name="Start">Start</string>
+    <string name="Add">Add</string>
+    <string name="Stop">Stop</string>
 </resources>

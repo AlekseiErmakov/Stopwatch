@@ -9,11 +9,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,14 +28,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Button StopAddBTN;
     public Button StartBTN;
     public Handler handler;
-    public static int countMilisec =0;
-    public static int countMicrosec =0;
-    public static int countsec =0;
-    public static int countDeciSec =0;
-    public static int countmin =0;
-    public static int countDecimin = 0;
-    public static int counthour =0;
-    public static int countDecihour =0;
+    public ScrollView scrollView;
+    public ListView listView;
+    public ArrayList<String> leaders;
+    public ArrayAdapter<String> adapter;
+    public static volatile int countMilisec =0;
+    public static volatile int countMicrosec =0;
+    public static volatile int countsec =0;
+    public static volatile int countDeciSec =0;
+    public static volatile int countmin =0;
+    public static volatile int countDecimin = 0;
+    public static volatile int counthour =0;
+    public static volatile int countDecihour =0;
     public static int DECI=10;
     public static int SIX=6;
     public static String A = ":";
@@ -38,22 +48,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Thread t;
     List<Thread> mythreads;
     int precommand;
+    int i=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        leaders = new ArrayList<>();
+        listView = (ListView)findViewById(R.id.list);
         addAll();
         mythreads = new ArrayList<>();
+        adapter= new ArrayAdapter<>(this,R.layout.leadersofus,this.leaders);
+        listView.setAdapter(adapter);
 
         handler = new Handler(){
             @Override
             public void handleMessage( Message msg) {
-                if (msg.what==0)
-                SecondsView.setText(time);
+                switch (msg.what){
+                    case (0):
+                        SecondsView.setText(time);
+                        break;
+                }
+
             }
         };
 
+
     }
+
+
+
     public void inkrementtime(){
         countMicrosec++;
         if (countMicrosec == DECI) {
@@ -90,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void setAlltoZero(){
         countMilisec =0;
-        countMicrosec =-1;
+        countMicrosec =0;
         countsec =0;
         countDeciSec =0;
         countmin =0;
@@ -115,37 +138,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
 
-        if (v.getId() == R.id.StartPause){
-            if (precommand==R.id.Start){
-                mythreads.get(0).interrupt();
-                precommand=R.id.StartPause;
-                StartPauseBTN.setText("continue");
+        switch (v.getId()) {
+            case (R.id.StartPause):
+                if (precommand == R.id.Start) {
+                    mythreads.get(0).interrupt();
+                    precommand = R.id.StartPause;
+                    StopAddBTN.setText(R.string.Stop);
+                    StartPauseBTN.setText(R.string.Continue);
+                } else if (precommand == R.id.StartPause) {
+                    goSeconds();
+                    precommand = R.id.Start;
+                    StartPauseBTN.setText(R.string.Pause);
+                } else if(precommand==0){
 
-            } else if (precommand==R.id.StartPause){
+                }
+
+                break;
+            case (R.id.Start):
+                StartBTN.setVisibility(View.INVISIBLE);
+                precommand = R.id.Start;
+                StopAddBTN.setText(R.string.Add);
                 goSeconds();
-                precommand=R.id.Start;
-                StartPauseBTN.setText("Pause");
-            }
+                break;
+            case (R.id.StopAdd):
+                if (precommand == R.id.StartPause) {
+                    StartPauseBTN.setText(R.string.Pause);
+                    setAlltoZero();
+                    SecondsView.setText("0:00:00");
+                    StartBTN.setVisibility(View.VISIBLE);
+                    leaders.clear();
+                    i=1;
+                    adapter.notifyDataSetChanged();
+                } else if (precommand == 0) {
 
-        }
-        else if(v.getId()==R.id.Start){
-            StartBTN.setVisibility(View.INVISIBLE);
-            precommand = R.id.Start;
-            goSeconds();
-        }else if(v.getId()== R.id.StopAdd){
-            if (precommand==R.id.StartPause){
-                setAlltoZero();
-                StartBTN.setVisibility(View.VISIBLE);
-            }else if(precommand==0){
+                } else if (precommand==R.id.Start){
 
-            }
-            else {
-            mythreads.get(0).interrupt();
-            StartBTN.setVisibility(View.VISIBLE);
-            setAlltoZero();}
+                    leaders.add("№"+i+"\t"+time);
+                    i++;
+                    adapter.notifyDataSetChanged();
 
+                }
+                break;
         }
     }
+
     public void goSeconds(){
         mythreads.clear();
         mythreads.add(new Thread(){
@@ -166,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mythreads.get(0).isDaemon();
         mythreads.get(0).start();
     }
+
 
 
 
