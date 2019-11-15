@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ListView listView;
     public ArrayList<String> leaders;
     public ArrayAdapter<String> adapter;
+    ImageView dogview;
     public static volatile int countMilisec =0;
     public static volatile int countMicrosec =0;
     public static volatile int countsec =0;
@@ -47,18 +50,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String time ="";
     Thread t;
     List<Thread> mythreads;
+    List<Thread> DogThreads;
     int precommand;
     int i=1;
+    float x =10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dogview = (ImageView)findViewById(R.id.imageView);
+        dogview.setX(x);
         leaders = new ArrayList<>();
         listView = (ListView)findViewById(R.id.list);
+
         addAll();
         mythreads = new ArrayList<>();
+        DogThreads = new ArrayList<>();
         adapter= new ArrayAdapter<>(this,R.layout.leadersofus,this.leaders);
         listView.setAdapter(adapter);
+        dogview.setX(x);
 
         handler = new Handler(){
             @Override
@@ -66,17 +78,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (msg.what){
                     case (0):
                         SecondsView.setText(time);
+                        dogview.setX(x);
                         break;
                 }
 
             }
         };
-
-
     }
-
-
-
     public void inkrementtime(){
         countMicrosec++;
         if (countMicrosec == DECI) {
@@ -159,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 StartBTN.setVisibility(View.INVISIBLE);
                 precommand = R.id.Start;
                 StopAddBTN.setText(R.string.Add);
+                dogThread();
+
                 goSeconds();
                 break;
             case (R.id.StopAdd):
@@ -203,6 +213,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         mythreads.get(0).isDaemon();
         mythreads.get(0).start();
+    }
+    public void dogThread(){
+        DogThreads.clear();
+        DogThreads.add(new Thread(){
+            @Override
+            public void run() {
+                while(!isInterrupted()) {
+                    try {
+                        Thread.sleep(500);
+                    }catch (InterruptedException ie ){
+                        interrupt();
+                    }
+                    dogRun();
+
+                }
+            }
+        });
+        DogThreads.get(0).isDaemon();
+        DogThreads.get(0).start();
+
+
+    }
+    public void dogRun(){
+        while(x<700){
+            x++;
+            try {
+                Thread.sleep(20);
+            }catch (InterruptedException ie){
+
+            }
+
+        }
+        while (x>50){
+            try {
+            Thread.sleep(20);
+            }catch (InterruptedException ie){
+
+            }
+            x--;
+        }
+        dogRun();
     }
 
 

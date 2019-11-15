@@ -5,4 +5,6 @@
     <string name="Start">Start</string>
     <string name="Add">Add</string>
     <string name="Stop">Stop</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="title_activity_second2">Second2Activity</string>
 </resources>
