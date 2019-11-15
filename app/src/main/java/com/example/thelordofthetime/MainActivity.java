@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     leaders.clear();
                     i=1;
                     adapter.notifyDataSetChanged();
+                    precommand=0;
                 } else if (precommand == 0) {
 
                 } else if (precommand==R.id.Start){
