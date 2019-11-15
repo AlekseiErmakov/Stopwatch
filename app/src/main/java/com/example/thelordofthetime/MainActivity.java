@@ -3,6 +3,7 @@ package com.example.thelordofthetime;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Button StartPauseBTN;
     public Button StopAddBTN;
     public Button StartBTN;
+    public Button GoToTimer;
     public Handler handler;
     public ScrollView scrollView;
     public ListView listView;
@@ -115,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             counthour = 0;
             countDecihour++;
         }
-        time = countDecimin+countmin+A+countDeciSec+countsec+A+countMilisec+countMicrosec;
-
+        time = countDecimin+""+countmin+A+countDeciSec+""+countsec+A+countMilisec+""+countMicrosec;
 
     }
     public void setAlltoZero(){
@@ -135,17 +136,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         StartPauseBTN =(Button)findViewById(R.id.StartPause);
         StopAddBTN = (Button)findViewById(R.id.StopAdd);
         StartBTN =(Button)findViewById(R.id.Start);
+        GoToTimer =(Button)findViewById(R.id.gototimer);
+        GoToTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent("com.example.thelordofthetime.Second2Activity");
+                startActivity(intent);
+            }
+        });
+
         StartBTN.setOnClickListener(this);
         StopAddBTN.setOnClickListener(this);
         StartPauseBTN.setOnClickListener(this);
-
-
     }
-
     @Override
     public void onClick(View v) {
-
-
         switch (v.getId()) {
             case (R.id.StartPause):
                 if (precommand == R.id.Start) {
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (precommand == R.id.StartPause) {
                     StartPauseBTN.setText(R.string.Pause);
                     setAlltoZero();
-                    SecondsView.setText("0:00:00");
+                    SecondsView.setText("00:00:00");
                     StartBTN.setVisibility(View.VISIBLE);
                     leaders.clear();
                     DogThreads.clear();
@@ -196,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
     public void goSeconds(){
         mythreads.clear();
         mythreads.add(new Thread(){
@@ -235,8 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         DogThreads.get(0).isDaemon();
         DogThreads.get(0).start();
-
-
     }
     public void dogRun(){
         while(x<700){
@@ -244,24 +246,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 Thread.sleep(20);
             }catch (InterruptedException ie){
-
             }
-
         }
         while (x>50){
             try {
             Thread.sleep(20);
             }catch (InterruptedException ie){
-
             }
             x--;
         }
         dogRun();
     }
-
-
-
-
-
-
 }
